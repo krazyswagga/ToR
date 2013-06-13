@@ -1,0 +1,4 @@
+name: ToR
+author: ToRPluginTeam
+version: 0.1
+main: tor.server.plugin.ToR
