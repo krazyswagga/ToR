@@ -13,8 +13,8 @@ import org.bukkit.entity.Player;
 import tor.server.plugin.ToR;
 
 
-public class ConfigFiles {
-	private FileConfiguration customConfig;
+public final class ConfigFiles {
+	public static FileConfiguration customConfig;
 	public File customConfigFile;
 	ToR plugin;
 	public ConfigFiles(String name, ToR plugin, Player player){
@@ -34,9 +34,18 @@ public class ConfigFiles {
 					YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
 					customConfig.setDefaults(defConfig);
 				}
-				getCustomConfig().set("Mana.MaxMana", 100);
+				getCustomConfig().set("Mana.maxMana", 100);
+                                getCustomConfig().set("Mana.getMana", 100);
+                                getCustomConfig().set("Health.maxHealth", 100);
+                                getCustomConfig().set("Health.getHealth", 100);
+
+
 				saveCustomConfig();
 				plugin.Rplayer.setMaxMana(getCustomConfig().getInt("Mana.MaxMana"));
+                                plugin.Rplayer.setMana(getCustomConfig().getInt("Mana.getMana"));
+                                plugin.Rplayer.setHealth(getCustomConfig().getInt("Health.getHealth"));
+                                plugin.Rplayer.setMaxHealth(getCustomConfig().getInt("Health.maxHealth"));
+
 				player.sendMessage(ChatColor.DARK_PURPLE + "Welcome to Tales of Runebrire!");
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -45,7 +54,7 @@ public class ConfigFiles {
 
 	}
 
-	public FileConfiguration getCustomConfig(){
+	public  FileConfiguration getCustomConfig(){
 		return customConfig;
 	}
 	public void saveCustomConfig() {

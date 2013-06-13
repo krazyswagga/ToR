@@ -11,7 +11,7 @@ import tor.server.plugin.RPlayer.RPlayer;
 
 public class ToR extends JavaPlugin {
 	
-	public RPlayer Rplayer = new RPlayer();
+	public RPlayer Rplayer = new RPlayer(this);
 	public Logger log = Logger.getLogger("Minecraft");
 	
 	public void onEnable(){
