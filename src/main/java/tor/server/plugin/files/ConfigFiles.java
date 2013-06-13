@@ -14,11 +14,7 @@ import tor.server.plugin.ToR;
 
 
 public final class ConfigFiles {
-<<<<<<< HEAD
 	public FileConfiguration customConfig;
-=======
-	public static FileConfiguration customConfig;
->>>>>>> 9fbbed883c375814fc641dced1e207aad33387ab
 	public File customConfigFile;
 	ToR plugin;
 	public ConfigFiles(String playerName, String filename, ToR plugin, Player player){
