@@ -14,7 +14,7 @@ public class DataFileListener implements Listener {
 	}
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e){
-		ConfigFiles file = new ConfigFiles(e.getPlayer().getName(), plugin, e.getPlayer());
+		ConfigFiles file = new ConfigFiles(e.getPlayer().getName(), "Skills" , plugin, e.getPlayer());
 	}
 
 }
