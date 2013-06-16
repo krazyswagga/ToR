@@ -20,9 +20,6 @@ public class RPlayer {
     ToR plugin;
     public FileConfiguration customConfig;
     public File customConfigFile;
-    private int MaxMana;
-    private int MaxHealth;
-    private int health;
     public Map<Attributes, Integer> attributes = new EnumMap<Attributes, Integer>(Attributes.class);
     public Map<Skill, Integer> skillExp = new EnumMap<Skill, Integer>(Skill.class);
     public Map<Skill, Integer> skillLevels = new EnumMap<Skill, Integer>(Skill.class);
@@ -36,15 +33,22 @@ public class RPlayer {
     }
 
     public void setMana(int mana) {
-       customConfig.set("Mana.Mana", mana);
+        
+        if (mana >= getMaxMana()) {
+            mana = getMaxMana();
+        }
+        if (mana < 0) {
+            mana = 0;
+        }
+        customConfig.set("Mana.Mana", mana);
     }
 
     public int getMaxMana() {
-        return customConfig.getInt("Mana.maxMana");    
+        return customConfig.getInt("Mana.maxMana");
     }
 
     public void setMaxMana(int MaxMana) {
-        customConfig.set("Mana.maxMana", MaxMana);   
+        customConfig.set("Mana.maxMana", MaxMana);
     }
 
     public int getHealth() {
@@ -52,7 +56,14 @@ public class RPlayer {
     }
 
     public void setHealth(int health) {
-       customConfig.set("Health.Health", health);
+          if (health >= getMaxHealth()) {
+            health = getMaxHealth();
+        }
+        if (health >= 0) {
+            health = 0;
+        }
+        customConfig.set("Health.Health", health);
+      
     }
 
     public int getMaxHealth() {
@@ -104,14 +115,15 @@ public class RPlayer {
                 customConfig.set("Health.Health", 100);
 
                 saveCustomConfig();
-                
+
                 player.sendMessage(ChatColor.DARK_PURPLE + "Welcome to Tales of Runebrire!");
             } catch (IOException e) {
                 plugin.log.info("Error creating playerfile!");
             }
         }
     }
-        public void saveCustomConfig() {
+
+    public void saveCustomConfig() {
         if (customConfig == null || customConfigFile == null) {
             plugin.getLogger().log(Level.SEVERE, "No file was found by that name");
         }
