@@ -3,7 +3,7 @@ package tor.server.plugin.RPlayer;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import org.bukkit.ChatColor;
@@ -20,9 +20,9 @@ public class RPlayer {
     ToR plugin;
     public FileConfiguration customConfig;
     public File customConfigFile;
-    public Map<Attributes, Integer> attributes = new EnumMap<Attributes, Integer>(Attributes.class);
-    public Map<Skill, Integer> skillExp = new EnumMap<Skill, Integer>(Skill.class);
-    public Map<Skill, Integer> skillLevels = new EnumMap<Skill, Integer>(Skill.class);
+    public Map<Attributes, Integer> attributes = new HashMap<Attributes, Integer>();
+    public Map<Skill, Integer> skillExp = new HashMap<Skill, Integer>();
+    public Map<Skill, Integer> skillLevels = new HashMap<Skill, Integer>();
 
     public RPlayer(ToR plugin) {
         this.plugin = plugin;
@@ -32,8 +32,12 @@ public class RPlayer {
         return customConfig.getInt("Mana.Mana");
     }
 
+    public int getMaxMana() {
+        return customConfig.getInt("Mana.maxMana");
+    }
+
     public void setMana(int mana) {
-        
+
         if (mana >= getMaxMana()) {
             mana = getMaxMana();
         }
@@ -43,12 +47,17 @@ public class RPlayer {
         customConfig.set("Mana.Mana", mana);
     }
 
-    public int getMaxMana() {
-        return customConfig.getInt("Mana.maxMana");
-    }
-
     public void setMaxMana(int MaxMana) {
         customConfig.set("Mana.maxMana", MaxMana);
+    }
+
+    public int getManaRegen() {
+        return customConfig.getInt("Mana.manaRegen");
+
+    }
+
+    public void setManaRegen(int regen) {
+        customConfig.set("Mana.manaRegen", regen);
     }
 
     public int getHealth() {
@@ -56,14 +65,14 @@ public class RPlayer {
     }
 
     public void setHealth(int health) {
-          if (health >= getMaxHealth()) {
+        if (health >= getMaxHealth()) {
             health = getMaxHealth();
         }
-        if (health >= 0) {
+        if (health < 0) {
             health = 0;
         }
         customConfig.set("Health.Health", health);
-      
+
     }
 
     public int getMaxHealth() {
@@ -75,22 +84,19 @@ public class RPlayer {
 
     }
 
+    public int getHealthRegen() {
+        return customConfig.getInt("Health.healthRegen");
+
+    }
+
+    public void setHealthRegen(int regen) {
+        customConfig.set("Health.healthRegen", regen);
+    }
+
     public void getLevel(Skill skill) {
         skillLevels.get(skill);
     }
-
-    public void getExp(Skill skill) {
-        skillExp.get(skill);
-    }
-
-    public void addExp(Skill skill, int addValue) {
-        skillExp.put(skill, skillExp.get(skill) + addValue);
-    }
-
-    public void getAttribute(Attributes att) {
-        attributes.get(att);
-    }
-
+    
     public void createPlayerFile(String playerName, Player player) {
 
         File directory = new File("plugins/ToR/Data/" + playerName + "/");
@@ -100,6 +106,7 @@ public class RPlayer {
         }
         customConfigFile = new File("plugins/ToR/Data/" + playerName + "/" + playerName + ".yml");
         customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
+        setSkillsInMapLv();
 
         if (!customConfigFile.exists()) {
             try {
@@ -111,9 +118,11 @@ public class RPlayer {
                 }
                 customConfig.set("Mana.maxMana", 100);
                 customConfig.set("Mana.Mana", 100);
+                customConfig.set("Mana.manaRegen", 1);
                 customConfig.set("Health.maxHealth", 100);
                 customConfig.set("Health.Health", 100);
-
+                customConfig.set("Health.healthRegen", 1);
+                AllTheSkills();
                 saveCustomConfig();
 
                 player.sendMessage(ChatColor.DARK_PURPLE + "Welcome to Tales of Runebrire!");
@@ -132,5 +141,160 @@ public class RPlayer {
         } catch (IOException ex) {
             plugin.getLogger().log(Level.SEVERE, "Could not save config to " + customConfigFile, ex);
         }
+    }
+
+    private void AllTheSkills() {
+        customConfig.set("Wisdom.Points", 10);
+        //
+        //
+        customConfig.set("Wisdom.Destruction.exp", 0);
+        customConfig.set("Wisdom.Destruction.level", 12);
+
+        customConfig.set("Wisdom.Summoning", 0);
+        customConfig.set("Wisdom.Summoning.level", 0);
+
+        customConfig.set("Wisdom.Healing.exp", 0);
+        customConfig.set("Wisdom.Healing.level", 0);
+
+        customConfig.set("Wisdom.Illusion.exp", 0);
+        customConfig.set("Wisdom.Illusion.level", 0);
+
+        customConfig.set("Wisdom.Druidry.exp", 0);
+        customConfig.set("Wisdom.Druidry.level", 0);
+        //
+        //
+        customConfig.set("DarkMagic.Points", 10);
+        //
+        //
+        customConfig.set("DarkMagic.Shadowmoor.exp", 0);
+        customConfig.set("DarkMagic.Shadowmoor.level", 0);
+        //
+        //
+        customConfig.set("Strength.Points", 10);
+        //
+        //
+        customConfig.set("Strength.HandToHand.exp", 0);
+        customConfig.set("Strength.HandToHand.level", 0);
+
+        customConfig.set("Strength.Sword.exp", 0);
+        customConfig.set("Strength.Sword.level", 0);
+
+        customConfig.set("Strength.Axe.exp", 0);
+        customConfig.set("Strength.Axe.level", 0);
+
+        customConfig.set("Strength.Shield.exp", 0);
+        customConfig.set("Strength.Shield.level", 0);
+
+        customConfig.set("Strength.HeavyArmor.exp", 0);
+        customConfig.set("Strength.HeavyArmor.level", 0);
+        //
+        //
+        customConfig.set("Dexterity.Points", 10);
+        //
+        //
+        customConfig.set("Dexterity.Accuracy.exp", 0);
+        customConfig.set("Dexterity.Accuracy.level", 0);
+
+        customConfig.set("Dexterity.Power.exp", 0);
+        customConfig.set("Dexterity.Power.level", 0);
+
+        customConfig.set("Dexterity.Tracking.exp", 0);
+        customConfig.set("Dexterity.Tracking.level", 0);
+
+        customConfig.set("Dexterity.Trapping.exp", 0);
+        customConfig.set("Dexterity.Trapping.level", 0);
+
+        customConfig.set("Dexterity.Taming.exp", 0);
+        customConfig.set("Dexterity.Taming.level", 0);
+
+        customConfig.set("Dexterity.LightArmor.exp", 0);
+        customConfig.set("Dexterity.LightArmor.level", 0);
+        //
+        //
+        customConfig.set("Agility.Points", 10);
+        //
+        //
+        customConfig.set("Agility.Mining.exp", 0);
+        customConfig.set("Agility.Mining.level", 0);
+
+        customConfig.set("Agility.Woodcutting.exp", 0);
+        customConfig.set("Agility.Woodcutting.level", 0);
+
+        customConfig.set("Agility.Farming.exp", 0);
+        customConfig.set("Agility.Farming.level", 0);
+
+        customConfig.set("Agility.Herbalism.exp", 0);
+        customConfig.set("Agility.Herbalism.level", 0);
+
+        customConfig.set("Agility.Fishing.exp", 0);
+        customConfig.set("Agility.Fishing.level", 0);
+        //
+        //
+        customConfig.set("Agility.Points", 10);
+        //
+        //
+        customConfig.set("Resourcefulness.Athleticism.exp", 0);
+        customConfig.set("Resourcefulness.Athleticism.level", 0);
+
+        customConfig.set("Resourcefulness.Sneaking.exp", 0);
+        customConfig.set("Resourcefulness.Sneaking.level", 0);
+
+        customConfig.set("Resourcefulness.Lockpicking.exp", 0);
+        customConfig.set("Resourcefulness.Lockpicking.level", 0);
+
+        customConfig.set("Resourcefulness.Pickpocketing.exp", 0);
+        customConfig.set("Resourcefulness.Pickpocketing.level", 0);
+
+        customConfig.set("Resourcefulness.Acrobatics.exp", 0);
+        customConfig.set("Resourcefulness.Acrobatics.level", 0);
+        //
+        //
+        customConfig.set("Charisma.Points", 10);
+        //
+        //
+        customConfig.set("Charisma.Humour.exp", 0);
+        customConfig.set("Charisma.Humour.level", 0);
+
+        customConfig.set("Charisma.Mercantile.exp", 0);
+        customConfig.set("Charisma.Mercantile.level", 0);
+
+        customConfig.set("Charisma.Charm.exp", 0);
+        customConfig.set("Charisma.Charm.level", 0);
+
+        customConfig.set("Charisma.Music.exp", 0);
+        customConfig.set("Charisma.Music.level", 0);
+        //
+        //
+
+    }
+
+    public void setSkillsInMapLv() {
+        skillLevels.put(Skill.DESTRUCTION, customConfig.getInt("Wisdom.Destruction.level"));
+        skillLevels.put(Skill.SUMMONING, customConfig.getInt("Wisdom.Summoning.level"));
+        skillLevels.put(Skill.HEALING, customConfig.getInt("Wisdom.Healing.level"));
+        skillLevels.put(Skill.ILLUSION, customConfig.getInt("Wisdom.Illusion.level"));
+        skillLevels.put(Skill.SHADOWMOOR, customConfig.getInt("DarkMagic.Shadowmoor.level"));
+        skillLevels.put(Skill.HANDTOHAND, customConfig.getInt("Strength.HandToHand.level"));
+        skillLevels.put(Skill.SWORD, customConfig.getInt("Strength.Sword.level"));
+        skillLevels.put(Skill.AXE, customConfig.getInt("Strength.Axe.level"));
+        skillLevels.put(Skill.SHIELD, customConfig.getInt("Strength.Shield.level"));
+        skillLevels.put(Skill.HEAVYARMOR, customConfig.getInt("Strength.HeavyArmor.level"));
+        skillLevels.put(Skill.ACCURACY, customConfig.getInt("Dexterity.Accuracy.level"));
+        skillLevels.put(Skill.POWER, customConfig.getInt("Dexterity.Power.level"));
+        skillLevels.put(Skill.TRACKING, customConfig.getInt("Dexterity.Tracking.level"));
+        skillLevels.put(Skill.TRAPPING, customConfig.getInt("Dexterity.Trapping.level"));
+        skillLevels.put(Skill.TAMING, customConfig.getInt("Dexterity.Taming.level"));
+        skillLevels.put(Skill.LIGHTARMOR, customConfig.getInt("Dexterity.LightArmor.level"));
+        skillLevels.put(Skill.ATHLETICISM, customConfig.getInt("Resourcefulness.Athleticism.level"));
+        skillLevels.put(Skill.SNEAKING, customConfig.getInt("Resourcefulness.Sneaking.level"));
+        skillLevels.put(Skill.LOCKPICKING, customConfig.getInt("Resourcefulness.Lockpicking.level"));
+        skillLevels.put(Skill.PICKPOCKETING, customConfig.getInt("Resourcefulness.Pickpocketing.level"));
+        skillLevels.put(Skill.ACROBATICS, customConfig.getInt("Resourcefulness.Acrobatics.level"));
+        skillLevels.put(Skill.HUMOR, customConfig.getInt("Charisma.Humour.level"));
+        skillLevels.put(Skill.MERCANTILE, customConfig.getInt("Charisma.Mercantile.level"));
+        skillLevels.put(Skill.CHARM, customConfig.getInt("Charisma.Charm.level"));
+        skillLevels.put(Skill.MUSIC, customConfig.getInt("Charisma.Music.level"));
+
+
     }
 }

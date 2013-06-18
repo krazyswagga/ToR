@@ -7,6 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import tor.server.plugin.RPlayer.RPlayer;
 
 import tor.server.plugin.ToR;
+import tor.server.plugin.data.Skill;
 
 public class DataFileListener implements Listener {
 
@@ -21,16 +22,15 @@ public class DataFileListener implements Listener {
     public void onPlayerJoin(final PlayerJoinEvent e) {
         Rplayer = new RPlayer(plugin);
         Rplayer.createPlayerFile(e.getPlayer().getName(), e.getPlayer());
-        Rplayer.setMana(0);
         Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new Runnable() {
             @Override
             public void run() {
-                    Rplayer.setMana(Rplayer.getMana() + 10);
-                    e.getPlayer().sendMessage("Player Mana: " + Rplayer.getMana());
-                    e.getPlayer().sendMessage("Player Health : " + Rplayer.getHealth());
-                
+                Rplayer.setMana(Rplayer.getMana() + Rplayer.getManaRegen());
+                Rplayer.setHealth(Rplayer.getHealth() + Rplayer.getHealthRegen());
+                e.getPlayer().sendMessage("Skills Level: " +Rplayer.skillLevels.get(Skill.DESTRUCTION));
+
             }
-        }, 10L, 20L);
+        }, 20L, 20L);
 
 
 
