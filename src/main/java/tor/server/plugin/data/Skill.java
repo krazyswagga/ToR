@@ -29,6 +29,8 @@ public enum Skill {
 	MINING,
 	WOODCUTTING,
 	FARMING,
-	FISHING
+	FISHING,
+       DRUIDRY,
+       HERBALISM
 
 };

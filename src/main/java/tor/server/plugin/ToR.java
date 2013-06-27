@@ -1,11 +1,10 @@
 package tor.server.plugin;
 
 import java.util.logging.Logger;
-import org.bukkit.event.Listener;
 
 import org.bukkit.plugin.java.JavaPlugin;
-
-import tor.server.plugin.Listeners.DataFileListener;
+import tor.server.plugin.Listeners.SkillsEXPListener;
+import tor.server.plugin.Listeners.SkillsLVListener;
 
 public class ToR extends JavaPlugin {
 
@@ -16,8 +15,10 @@ public class ToR extends JavaPlugin {
 
         log.info("[ToR] Enabled = Alpha 1.0 =");
         // * Listeners * \\
-        getServer().getPluginManager().registerEvents(new DataFileListener(this), this);
-        getServer().getPluginManager().registerEvents((Listener) new SkillListeners(this), this);
+        getServer().getPluginManager().registerEvents(new SkillsEXPListener(this), this);
+        getServer().getPluginManager().registerEvents(new SkillsLVListener(this), this);
+
+
 
     }
 
